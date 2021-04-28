@@ -274,7 +274,7 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
         /**
          * A brief tutorial: here's how all the math is going to work:
          *
-         * C = phoneLocationOnRobot  maps   phone coords -> robot coords
+         * C = phoneLocationOnRobot  maps   phone direction -> robot direction
          * P = tracker.getPose()     maps   image target coords -> phone coords
          * L = redTargetLocationOnField maps   image target coords -> field coords
          *
