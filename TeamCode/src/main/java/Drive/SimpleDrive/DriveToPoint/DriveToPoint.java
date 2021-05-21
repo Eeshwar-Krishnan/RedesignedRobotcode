@@ -1,4 +1,4 @@
-package Drive.DriveToPoint;
+package Drive.SimpleDrive.DriveToPoint;
 
 import Drive.DriveState;
 import Hardware.HardwareSystems.UltimateGoal.Drivetrain;

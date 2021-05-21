@@ -1,22 +1,19 @@
-package Drive;
+package Drive.SimpleDrive;
 
-import Drive.DriveToPoint.DriveToPoint;
-import Drive.DriveToPoint.DriveToPointBuilder;
-import Drive.GuidingVectorField.GVFBuilder;
-import Drive.PurePursuit.PurePursuitBuilder;
+import Drive.SimpleDrive.DriveToPoint.DriveToPointBuilder;
+import Drive.SimpleDrive.GuidingVectorField.GVFBuilder;
+import Drive.SimpleDrive.PurePursuit.PurePursuitBuilder;
 import Hardware.HardwareSystems.UltimateGoal.Drivetrain;
-import MathSystems.Angle;
 import MathSystems.Path.Path;
-import MathSystems.Path.PathBuilder;
 import MathSystems.Position;
 import State.StateMachine;
 
-public class DriveFactory {
+public class SimpleDriveFactory {
     private StateMachine stateMachine;
     private Drivetrain drivetrain;
     private Position position;
 
-    public DriveFactory(StateMachine stateMachine, Drivetrain drivetrain, Position position){
+    public SimpleDriveFactory(StateMachine stateMachine, Drivetrain drivetrain, Position position){
         this.stateMachine = stateMachine;
         this.drivetrain = drivetrain;
         this.position = position;

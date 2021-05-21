@@ -8,11 +8,13 @@ public class StateMachine {
     private final HashMap<String, AsyncState> states;
     private final HashMap<String, AsyncState> activeStates;
     private final HashMap<String, AsyncState> queriedStates;
+    private final HashMap<String, AsyncState> removingStates;
 
     public StateMachine(){
         states = new HashMap<>();
         queriedStates = new HashMap<>();
         activeStates = new HashMap<>();
+        removingStates = new HashMap<>();
     }
 
     public void update(){
@@ -20,6 +22,10 @@ public class StateMachine {
         queriedStates.clear();
         for(String s : activeStates.keySet()){
             activeStates.get(s).update();
+        }
+        for(String s : removingStates.keySet()){
+            states.get(s).onStop();
+            states.remove(s);
         }
     }
 
@@ -61,8 +67,7 @@ public class StateMachine {
 
     public boolean terminateState(String state){
         if(states.containsKey(state)){
-            states.get(state).onStop();
-            states.remove(state);
+            removingStates.put(state, states.get(state));
             return true;
         }
         return false;

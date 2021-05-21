@@ -1,4 +1,4 @@
-package Drive.DriveToPoint;
+package Drive.SimpleDrive.DriveToPoint;
 
 import Hardware.HardwareSystems.UltimateGoal.Drivetrain;
 import MathSystems.Angle;

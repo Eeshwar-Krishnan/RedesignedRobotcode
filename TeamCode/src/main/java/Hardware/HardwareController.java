@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import Hardware.HardwareSystems.HardwareSystem;
+import State.StateMachine;
+import State.States.AsyncState;
 
 public abstract class HardwareController {
     public HardwareMap map;
@@ -21,12 +23,16 @@ public abstract class HardwareController {
     public LynxModule controlHub, revHub;
     private Thread controlhubThread, revhubThread;
     private AtomicBoolean active;
+    private final StateMachine controlStates;
+    private final StateMachine revStates;
 
     public HardwareController(HardwareMap map){
         this.map = map;
         revHubs = new ArrayList<>();
         hardwareSystems = new HashMap<>();
         active = new AtomicBoolean(true);
+        controlStates = new StateMachine();
+        revStates = new StateMachine();
     }
 
     public void init(){
@@ -57,6 +63,9 @@ public abstract class HardwareController {
                     for (HardwareSystem system : controlHubSystems) {
                         system.update();
                     }
+                    synchronized (controlStates){
+                        controlStates.update();
+                    }
                 }
             }
         });
@@ -67,6 +76,9 @@ public abstract class HardwareController {
                     revHub.clearBulkCache();
                     for(HardwareSystem system : controlHubSystems){
                         system.update();
+                    }
+                    synchronized (revStates){
+                        revStates.update();
                     }
                 }
             }
@@ -80,6 +92,18 @@ public abstract class HardwareController {
     public void forceInterruptRefresh(){
         for (LynxModule m : revHubs) {
             m.clearBulkCache();
+        }
+    }
+
+    public void attachControlState(String name, AsyncState state){
+        synchronized (controlStates){
+            controlStates.appendState(name, state);
+        }
+    }
+
+    public void attachRevState(String name, AsyncState state){
+        synchronized (revStates){
+            revStates.appendState(name, state);
         }
     }
 

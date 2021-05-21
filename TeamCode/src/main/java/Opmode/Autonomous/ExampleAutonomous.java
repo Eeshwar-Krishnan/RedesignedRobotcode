@@ -1,6 +1,6 @@
 package Opmode.Autonomous;
 
-import Drive.DriveFactory;
+import Drive.SimpleDrive.SimpleDriveFactory;
 import Hardware.HardwareSystems.UltimateGoal.Shooter;
 import MathSystems.Angle;
 import MathSystems.Path.Path;
@@ -17,7 +17,7 @@ import State.States.AsyncState;
 public class ExampleAutonomous extends BasicOpmode {
     public Position position, velocity;
     public int someGameVariable = 0;
-    public DriveFactory factory;
+    public SimpleDriveFactory factory;
     @Override
     public void setup() {
         position = Position.ZERO();
@@ -25,7 +25,7 @@ public class ExampleAutonomous extends BasicOpmode {
         Odometer odometer = new SimpleOdometer(position, velocity);
         hardware.getOdometry().attachOdometer(odometer);
 
-        factory = new DriveFactory(stateMachine, hardware.getDrivetrain(), position);
+        factory = new SimpleDriveFactory(stateMachine, hardware.getDrivetrain(), position);
 
         stateMachine.submit("Check For Some Variable", new AsyncState(stateMachine) {
             @Override
@@ -36,19 +36,17 @@ public class ExampleAutonomous extends BasicOpmode {
             }
         });
 
-        eventSystem.submitOnStart("Action 1", doAction1("Switch 1"));
+        eventSystem.submitOnStart("Action 1", doAction1("Switch 1", position.clone()));
+
         stateMachine.appendState("Switch 1", new AsyncState(stateMachine) {
             @Override
             public void update() {
                 if(someGameVariable == 1){
                     stateMachine.submit("Action2", doAction2("Stop", position.clone()));
-                }else if(someGameVariable == 2){
-
-                }else{
-
                 }
             }
         });
+
         stateMachine.appendState("Stop", new AsyncState(stateMachine) {
             @Override
             public void update() {
@@ -62,8 +60,8 @@ public class ExampleAutonomous extends BasicOpmode {
 
     }
 
-    public ControlGroup doAction1(final String nextState){
-        Path path1 = new PathBuilder(Position.ZERO())
+    public ControlGroup doAction1(final String nextState, Position position){
+        Path path1 = new PathBuilder(position)
                 .lineTo(20, 50, Angle.degrees(10))
                 .complete();
         ControlState state1 = factory.buildGVF(path1).complete();
@@ -83,7 +81,7 @@ public class ExampleAutonomous extends BasicOpmode {
                 stateMachine.activateState(nextState);
             }
         };
-        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2, state3, state4);
+        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2, state3, state4, state5);
     }
 
     public ControlGroup doAction2(final String nextState, Position startPos){
@@ -103,6 +101,6 @@ public class ExampleAutonomous extends BasicOpmode {
                 stateMachine.activateState(nextState);
             }
         };
-        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2);
+        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2, state3);
     }
 }

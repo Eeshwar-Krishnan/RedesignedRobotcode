@@ -76,42 +76,66 @@ public class Shooter extends HardwareSystem {
         ArrayList<ControlState> shootStates = new ArrayList<>();
 
         shootStates.add(new ControlState(stateMachine) {
-            int timer = 2;
-            @Override
-            public void onInit() {
-                timer = 2;
-            }
 
             @Override
             public boolean shouldTerminate() {
-                return timer <= 0;
+                return true;
             }
 
             @Override
             public void update() {
                 hardware.getShooter().indexIn();
-                timer --;
             }
         });
 
         shootStates.add(new TimerControlState(stateMachine, 80));
 
         shootStates.add(new ControlState(stateMachine) {
-            int timer = 2;
-            @Override
-            public void onInit() {
-                timer = 2;
-            }
 
             @Override
             public boolean shouldTerminate() {
-                return timer <= 0;
+                return true;
             }
 
             @Override
             public void update() {
                 hardware.getShooter().indexOut();
-                timer --;
+            }
+        });
+
+        shootStates.add(new TimerControlState(stateMachine, 100));
+
+        return new ControlGroup(stateMachine, stop_condition, shootStates);
+    }
+
+    public ControlGroup getShooterControlGroup(StateMachine stateMachine, ControlGroup.STOP_CONDITION stop_condition){
+        ArrayList<ControlState> shootStates = new ArrayList<>();
+
+        shootStates.add(new ControlState(stateMachine) {
+
+            @Override
+            public boolean shouldTerminate() {
+                return true;
+            }
+
+            @Override
+            public void update() {
+                indexIn();
+            }
+        });
+
+        shootStates.add(new TimerControlState(stateMachine, 80));
+
+        shootStates.add(new ControlState(stateMachine) {
+
+            @Override
+            public boolean shouldTerminate() {
+                return true;
+            }
+
+            @Override
+            public void update() {
+                indexOut();
             }
         });
 

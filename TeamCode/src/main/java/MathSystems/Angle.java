@@ -22,6 +22,15 @@ public class Angle {
         return new Angle(angle);
     }
 
+    public static Angle fromString(String angle){
+        if(angle.endsWith("D")){
+            return Angle.degrees(Double.parseDouble(angle.substring(0, angle.length()-1)));
+        }else if(angle.endsWith("R")){
+            return Angle.radians(Double.parseDouble(angle.substring(0, angle.length()-1)));
+        }
+        return Angle.degrees(Double.parseDouble(angle));
+    }
+
     public static Angle ZERO(){
         return Angle.radians(0);
     }

@@ -1,4 +1,4 @@
-package Drive.GuidingVectorField;
+package Drive.SimpleDrive.GuidingVectorField;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,9 @@ public class GVFFollower extends DriveState {
     private double xPrec, yPrec, rPrec, speed, slowdownMod, lineDev;
     private Path path;
 
-    public GVFFollower(StateMachine stateMachine, Position position, Drivetrain drivetrain, double xPrec, double yPrec, double rPrec, double speed, Path path, double slowdownMod, double lineDev) {
+    public GVFFollower
+            (StateMachine stateMachine, Position position, Drivetrain drivetrain, double xPrec, double yPrec, double rPrec,
+             double speed, Path path, double slowdownMod, double lineDev) {
         super(stateMachine, position, drivetrain);
         this.xPrec = xPrec;
         this.yPrec = yPrec;
