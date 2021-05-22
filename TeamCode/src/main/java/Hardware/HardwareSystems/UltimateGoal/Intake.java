@@ -9,16 +9,16 @@ public class Intake extends HardwareSystem {
     private final DcMotor intakeLower;
     private final DcMotor intakeTop;
     private final Servo stickLeft;
-    private final Servo stickRight;
+    private final Servo intakeShield;
     private double intakeSpeed;
     private double leftStick;
-    private double rightStick;
+    private double shieldPosition;
 
-    public Intake(DcMotor intakeLower, DcMotor intakeTop, Servo stickLeft, Servo stickRight){
+    public Intake(DcMotor intakeLower, DcMotor intakeTop, Servo stickLeft, Servo intakeShield){
         this.intakeLower = intakeLower;
         this.intakeTop = intakeTop;
         this.stickLeft = stickLeft;
-        this.stickRight = stickRight;
+        this.intakeShield = intakeShield;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Intake extends HardwareSystem {
         intakeTop.setPower(intakeSpeed);
         intakeLower.setPower(intakeSpeed);
         stickLeft.setPosition(leftStick);
-        stickRight.setPosition(rightStick);
+        intakeShield.setPosition(shieldPosition);
     }
 
     public void setIntakeSpeed(double intakeSpeed) {
@@ -42,15 +42,19 @@ public class Intake extends HardwareSystem {
         this.leftStick = 0.1;
     }
 
-    public void stickRightDown(){
-        this.rightStick = 0.1;
-    }
-
     public void stickLeftUp(){
         this.leftStick = 0.9;
     }
 
-    public void stickRightUp(){
-        this.rightStick = 0.9;
+    public void shieldDown(){
+        this.shieldPosition = 0.1;
+    }
+
+    public void shieldUp(){
+        this.shieldPosition = 0.9;
+    }
+
+    public void shieldIdle(){
+        this.shieldPosition = 0.5;
     }
 }

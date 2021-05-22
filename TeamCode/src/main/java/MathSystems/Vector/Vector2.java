@@ -1,4 +1,7 @@
-package MathSystems;
+package MathSystems.Vector;
+
+import MathSystems.Angle;
+import MathSystems.MathUtils;
 
 public class Vector2 {
     private static final Vector2 ZERO = new Vector2(0, 0);

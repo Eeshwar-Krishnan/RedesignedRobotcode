@@ -2,10 +2,8 @@ package Odometry;
 
 import Hardware.HardwareSystems.UltimateGoal.Odometry;
 import MathSystems.Position;
-import MathSystems.Vector2;
-import MathSystems.Vector3;
-import State.StateMachine;
-import State.States.AsyncState;
+import MathSystems.Vector.Vector2;
+import MathSystems.Vector.Vector3;
 
 public abstract class Odometer {
     private Position position, velocity;

@@ -1,12 +1,10 @@
 package Opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
-
-import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 
 import Hardware.UltimateGoalHardware;
-import MathSystems.ProgramClock;
+import Utils.OpmodeStatus;
+import Utils.ProgramClock;
 import State.EventSystem;
 import State.StateMachine;
 
@@ -18,6 +16,7 @@ public abstract class BasicOpmode extends LinearOpMode {
     public EventSystem eventSystem;
 
     public BasicOpmode(boolean runHardware){
+        OpmodeStatus.attach(this);
         this.runHardware = runHardware;
         eventSystem = new EventSystem();
     }
@@ -30,10 +29,13 @@ public abstract class BasicOpmode extends LinearOpMode {
 
     public abstract void update();
 
+    public void onStop(){}
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         hardware = new UltimateGoalHardware(hardwareMap);
-        hardware.init();
+        if(runHardware)
+            hardware.init();
         if(!runHardware)
             hardware.deactivate();
         setup();
@@ -47,7 +49,10 @@ public abstract class BasicOpmode extends LinearOpMode {
             stateMachine.update();
             ProgramClock.update();
             telemetry.update();
+            if(runHardware)
+                hardware.heartbeat();
         }
+        onStop();
         hardware.deactivate();
     }
 }

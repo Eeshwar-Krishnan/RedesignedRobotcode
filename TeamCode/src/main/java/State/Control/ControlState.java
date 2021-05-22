@@ -11,4 +11,10 @@ public abstract class ControlState extends AsyncState {
 
     public abstract boolean shouldTerminate();
 
+    public void yield(){
+        synchronized (stateMachine){
+            submit();
+        }
+        while(!shouldTerminate());
+    }
 }

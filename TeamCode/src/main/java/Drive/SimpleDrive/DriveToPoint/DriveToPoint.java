@@ -6,8 +6,8 @@ import Hardware.RobotConstants;
 import MathSystems.Angle;
 import MathSystems.MathUtils;
 import MathSystems.Position;
-import MathSystems.Vector2;
-import MathSystems.Vector3;
+import MathSystems.Vector.Vector2;
+import MathSystems.Vector.Vector3;
 import State.StateMachine;
 
 public class DriveToPoint extends DriveState {

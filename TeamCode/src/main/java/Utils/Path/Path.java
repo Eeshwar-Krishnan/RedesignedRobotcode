@@ -1,10 +1,9 @@
-package MathSystems.Path;
+package Utils.Path;
 
 import java.util.ArrayList;
 
 import MathSystems.Position;
-import MathSystems.Vector2;
-import MathSystems.Vector3;
+import MathSystems.Vector.Vector2;
 
 public class Path {
 	private ArrayList<Position> lines;

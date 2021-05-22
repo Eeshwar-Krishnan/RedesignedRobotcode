@@ -4,10 +4,9 @@ import Hardware.HardwareSystems.UltimateGoal.Odometry;
 import Hardware.RobotConstants;
 import MathSystems.Angle;
 import MathSystems.Position;
-import MathSystems.ProgramClock;
-import MathSystems.Vector2;
-import MathSystems.Vector3;
-import State.StateMachine;
+import Utils.ProgramClock;
+import MathSystems.Vector.Vector2;
+import MathSystems.Vector.Vector3;
 
 public class SimpleOdometer extends Odometer {
     private Position prevPosition;

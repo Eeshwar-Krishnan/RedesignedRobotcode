@@ -1,12 +1,11 @@
-package MathSystems.Path;
+package Utils.Path;
 
 import java.util.ArrayList;
 
 import MathSystems.Angle;
 import MathSystems.MathUtils;
 import MathSystems.Position;
-import MathSystems.Vector2;
-import MathSystems.Vector3;
+import MathSystems.Vector.Vector2;
 
 public class PathBuilder {
 	private ArrayList<Position> lines;
@@ -62,6 +61,16 @@ public class PathBuilder {
 			lines.add(new Position(v, angle));
 		}
 		return this;
+	}
+
+	public void reset(Position startPoint){
+		this.startPoint.set(startPoint);
+		lines.clear();
+	}
+
+	public void reset(){
+		this.startPoint.set(lines.get(lines.size()-1));
+		lines.clear();
 	}
 	
 	public Path complete() {

@@ -46,6 +46,7 @@ public class StateMachine {
 
     public boolean activateState(String name){
         if(states.containsKey(name) && !queriedStates.containsKey(name)){
+            states.get(name).onInit();
             queriedStates.put(name, states.get(name));
             return true;
         }

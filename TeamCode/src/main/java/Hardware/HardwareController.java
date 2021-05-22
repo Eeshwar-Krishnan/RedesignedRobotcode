@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import Hardware.HardwareSystems.HardwareSystem;
 import State.StateMachine;
 import State.States.AsyncState;
+import Utils.OpmodeStatus;
+import Utils.ThreadManager;
 
 public abstract class HardwareController {
     public HardwareMap map;
@@ -21,8 +23,9 @@ public abstract class HardwareController {
     public ArrayList<HardwareSystem> controlHubSystems;
     public ArrayList<HardwareSystem> revHubSystems;
     public LynxModule controlHub, revHub;
-    private Thread controlhubThread, revhubThread;
+    private Runnable controlhubThread, revhubThread;
     private AtomicBoolean active;
+    private long timestamp;
     private final StateMachine controlStates;
     private final StateMachine revStates;
 
@@ -33,6 +36,7 @@ public abstract class HardwareController {
         active = new AtomicBoolean(true);
         controlStates = new StateMachine();
         revStates = new StateMachine();
+        timestamp = 0;
     }
 
     public void init(){
@@ -55,7 +59,7 @@ public abstract class HardwareController {
         for(HardwareSystem system : revHubSystems){
             system.calibrate();
         }
-        controlhubThread = new Thread(new Runnable() {
+        controlhubThread = new Runnable() {
             @Override
             public void run() {
                 while(active.get()){
@@ -68,8 +72,8 @@ public abstract class HardwareController {
                     }
                 }
             }
-        });
-        revhubThread = new Thread(new Runnable() {
+        };
+        revhubThread = new Runnable() {
             @Override
             public void run() {
                 while(active.get()){
@@ -82,16 +86,18 @@ public abstract class HardwareController {
                     }
                 }
             }
-        });
-        controlhubThread.start();
-        revhubThread.start();
+        };
+        ThreadManager.execute(controlhubThread);
+        ThreadManager.execute(revhubThread);
     }
 
     public abstract void setupSystems();
 
-    public void forceInterruptRefresh(){
-        for (LynxModule m : revHubs) {
-            m.clearBulkCache();
+    public void forceRefresh(){
+        synchronized (revHubs) {
+            for (LynxModule m : revHubs) {
+                m.clearBulkCache();
+            }
         }
     }
 
@@ -104,6 +110,18 @@ public abstract class HardwareController {
     public void attachRevState(String name, AsyncState state){
         synchronized (revStates){
             revStates.appendState(name, state);
+        }
+    }
+
+    public void heartbeat(){
+        if(timestamp == 0){
+            timestamp = System.currentTimeMillis();
+        }
+        if(System.currentTimeMillis() - timestamp > 5000 || OpmodeStatus.opmodeActive()){
+            //TODO
+            //Probably better ways to handle this, but if the hardware hasn't talked to the logic thread in more then 5 seconds
+            //Then the logic thread (AKA) the opmode is probably dead, and we should kill the hardware thread before problems happen
+            active.set(false);
         }
     }
 

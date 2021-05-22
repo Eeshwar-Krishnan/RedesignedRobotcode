@@ -1,4 +1,4 @@
-package MathSystems;
+package MathSystems.Vector;
 
 public class Vector4 {
     private double a, b, c, d;

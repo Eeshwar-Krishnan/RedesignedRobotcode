@@ -1,4 +1,7 @@
-package MathSystems;
+package Utils;
+
+import MathSystems.MathUtils;
+
 public class ProgramClock {
     private static ProgramClock instance = new ProgramClock();
     public long dt, prevTime;

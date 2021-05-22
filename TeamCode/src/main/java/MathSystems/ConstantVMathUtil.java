@@ -1,5 +1,7 @@
 package MathSystems;
 
+import MathSystems.Vector.Vector2;
+
 /**
  * For a breakdown of how this works
  *

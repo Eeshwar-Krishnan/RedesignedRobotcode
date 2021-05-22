@@ -1,4 +1,6 @@
-package MathSystems;
+package MathSystems.Matrix;
+
+import MathSystems.Vector.Vector2;
 
 public class Matrix22 {
     private Vector2 i, j;

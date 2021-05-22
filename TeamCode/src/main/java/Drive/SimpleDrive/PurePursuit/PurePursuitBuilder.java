@@ -2,7 +2,7 @@ package Drive.SimpleDrive.PurePursuit;
 
 import Hardware.HardwareSystems.UltimateGoal.Drivetrain;
 import MathSystems.Angle;
-import MathSystems.Path.Path;
+import Utils.Path.Path;
 import MathSystems.Position;
 import State.StateMachine;
 

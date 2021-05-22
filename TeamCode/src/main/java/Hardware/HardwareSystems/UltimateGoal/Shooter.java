@@ -7,10 +7,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.ArrayList;
 
 import Hardware.HardwareSystems.HardwareSystem;
-import Hardware.UltimateGoalHardware;
 import MathSystems.Angle;
 import MathSystems.MathUtils;
-import MathSystems.PIDSystem;
+import Utils.PIDSystem;
 import State.Control.ControlGroup;
 import State.Control.ControlState;
 import State.Control.TimerControlState;
@@ -26,12 +25,15 @@ public class Shooter extends HardwareSystem {
     private final DcMotorEx shooter2;
     private final Servo indexer, shooterPitch, shooterTurret;
 
-    public Shooter(DcMotor shooter1, DcMotor shooter2, Servo indexer, Servo shooterPitch, Servo shooterTurret){
+    private VisionSystem visionSystem;
+
+    public Shooter(VisionSystem visionSystem, DcMotor shooter1, DcMotor shooter2, Servo indexer, Servo shooterPitch, Servo shooterTurret){
         this.shooter1 = (DcMotorEx) shooter1;
         this.shooter2 = (DcMotorEx) shooter2;
         this.indexer = indexer;
         this.shooterPitch = shooterPitch;
         this.shooterTurret = shooterTurret;
+        this.visionSystem = visionSystem;
     }
 
     @Override
@@ -72,11 +74,8 @@ public class Shooter extends HardwareSystem {
         turret = ((degrees + MIN_ANGLE) / (MIN_ANGLE + MAX_ANGLE));
     }
 
-    public static ControlGroup getShooterControlGroup(StateMachine stateMachine, final UltimateGoalHardware hardware, ControlGroup.STOP_CONDITION stop_condition){
-        ArrayList<ControlState> shootStates = new ArrayList<>();
-
-        shootStates.add(new ControlState(stateMachine) {
-
+    private ControlGroup targetPowershot(StateMachine stateMachine, final int powershot){
+        ControlState state1 = new ControlState(stateMachine) {
             @Override
             public boolean shouldTerminate() {
                 return true;
@@ -84,28 +83,23 @@ public class Shooter extends HardwareSystem {
 
             @Override
             public void update() {
-                hardware.getShooter().indexIn();
+                aimAt(Angle.degrees(visionSystem.getPowershots()[powershot]));
             }
-        });
+        };
+        ControlState state2 = new TimerControlState(stateMachine, 150);
+        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2);
+    }
 
-        shootStates.add(new TimerControlState(stateMachine, 80));
+    public ControlGroup targetLeftPowershot(StateMachine stateMachine){
+        return targetPowershot(stateMachine, 0);
+    }
 
-        shootStates.add(new ControlState(stateMachine) {
+    public ControlGroup targetCenterPowershot(StateMachine stateMachine){
+        return targetPowershot(stateMachine, 1);
+    }
 
-            @Override
-            public boolean shouldTerminate() {
-                return true;
-            }
-
-            @Override
-            public void update() {
-                hardware.getShooter().indexOut();
-            }
-        });
-
-        shootStates.add(new TimerControlState(stateMachine, 100));
-
-        return new ControlGroup(stateMachine, stop_condition, shootStates);
+    public ControlGroup targetRightPowershot(StateMachine stateMachine){
+        return targetPowershot(stateMachine, 2);
     }
 
     public ControlGroup getShooterControlGroup(StateMachine stateMachine, ControlGroup.STOP_CONDITION stop_condition){

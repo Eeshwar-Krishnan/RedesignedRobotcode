@@ -2,17 +2,16 @@ package Hardware.HardwareSystems.UltimateGoal;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import Hardware.HardwareSystems.HardwareSystem;
-import MathSystems.Vector3;
-import MathSystems.Vector4;
+import MathSystems.Vector.Vector3;
+import MathSystems.Vector.Vector4;
 
 public class Drivetrain extends HardwareSystem {
     private DcMotorEx bl, br, tl, tr;
     private Vector4 power = new Vector4(0, 0, 0, 0);
 
-    public Drivetrain(DcMotor bl, DcMotor br, DcMotor tl, DcMotor tr, VoltageSensor battery){
+    public Drivetrain(DcMotor bl, DcMotor br, DcMotor tl, DcMotor tr){
         this.bl = (DcMotorEx) bl;
         this.br = (DcMotorEx) br;
         this.tl = (DcMotorEx) tl;

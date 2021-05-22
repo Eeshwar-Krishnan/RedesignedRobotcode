@@ -1,106 +1,80 @@
 package Opmode.Autonomous;
 
-import Drive.SimpleDrive.SimpleDriveFactory;
-import Hardware.HardwareSystems.UltimateGoal.Shooter;
 import MathSystems.Angle;
-import MathSystems.Path.Path;
-import MathSystems.Path.PathBuilder;
-import MathSystems.Position;
-import MathSystems.Vector3;
-import Odometry.Odometer;
-import Odometry.SimpleOdometer;
-import Opmode.BasicOpmode;
+import Opmode.AutoOpmode;
 import State.Control.ControlGroup;
-import State.Control.ControlState;
 import State.States.AsyncState;
 
-public class ExampleAutonomous extends BasicOpmode {
-    public Position position, velocity;
+public class ExampleAutonomous extends AutoOpmode {
     public int someGameVariable = 0;
-    public SimpleDriveFactory factory;
+
     @Override
-    public void setup() {
-        position = Position.ZERO();
-        velocity = Position.ZERO();
-        Odometer odometer = new SimpleOdometer(position, velocity);
-        hardware.getOdometry().attachOdometer(odometer);
-
-        factory = new SimpleDriveFactory(stateMachine, hardware.getDrivetrain(), position);
-
-        stateMachine.submit("Check For Some Variable", new AsyncState(stateMachine) {
+    public void initialize() {
+        hardware.getDrivetrain().setBrake();
+        hardware.getIntake().shieldUp();
+        new AsyncState(stateMachine) {
             @Override
             public void update() {
-                someGameVariable = ((int)(Math.random() * 3)) + 1;
+                someGameVariable = (int) (Math.random() * 2);
+
                 if(isStarted())
                     terminate();
             }
-        });
-
-        eventSystem.submitOnStart("Action 1", doAction1("Switch 1", position.clone()));
-
-        stateMachine.appendState("Switch 1", new AsyncState(stateMachine) {
-            @Override
-            public void update() {
-                if(someGameVariable == 1){
-                    stateMachine.submit("Action2", doAction2("Stop", position.clone()));
-                }
-            }
-        });
-
-        stateMachine.appendState("Stop", new AsyncState(stateMachine) {
-            @Override
-            public void update() {
-                hardware.getDrivetrain().setDirection(Vector3.ZERO());
-            }
-        });
+        }.submit();
     }
 
     @Override
-    public void update() {
+    public void synchronous() {
+        waitUntilStart();
+        hardware.getIntake().shieldDown();
 
-    }
+        pathBuilder.lineTo(-2.5, 50);
+        factory.buildGVF(pathBuilder.complete()).complete().yield();
 
-    public ControlGroup doAction1(final String nextState, Position position){
-        Path path1 = new PathBuilder(position)
-                .lineTo(20, 50, Angle.degrees(10))
-                .complete();
-        ControlState state1 = factory.buildGVF(path1).complete();
-        ControlState state2 = Shooter.getShooterControlGroup(stateMachine, hardware, ControlGroup.STOP_CONDITION.TERMINATE_ALL);
-        Path path2 = new PathBuilder(path1.getEndpoint())
-                .lineTo(0, 50, Angle.degrees(-10)).complete();
-        ControlState state3 = factory.buildGVF(path2).complete();
-        ControlState state4 = Shooter.getShooterControlGroup(stateMachine, hardware, ControlGroup.STOP_CONDITION.TERMINATE_ALL);
-        ControlState state5 = new ControlState(stateMachine) {
-            @Override
-            public boolean shouldTerminate() {
-                return true;
+        hardware.getShooter().targetLeftPowershot(stateMachine).yield();
+        hardware.getShooter().getShooterControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL).yield();
+
+        hardware.getShooter().targetCenterPowershot(stateMachine).yield();
+        hardware.getShooter().getShooterControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL).yield();
+
+        hardware.getShooter().targetRightPowershot(stateMachine).yield();
+        hardware.getShooter().getShooterControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL).yield();
+
+        hardware.getIntake().shieldUp();
+
+        if(someGameVariable == 1){
+
+        }else{
+            pathBuilder.reset();
+            if(someGameVariable == 0){
+                pathBuilder.lineTo(35, 84);
+                factory.buildGVF(pathBuilder.complete()).complete().yield();
+                //TODO: Drop The Wobble
+                pathBuilder.reset();
+                pathBuilder.lineTo(35, 108);
+                pathBuilder.lineTo(40, 118);
+            }else{
+                pathBuilder.lineTo(30, 122);
+                //TODO: Drop The Wobble
             }
+            factory.buildGVF(pathBuilder.complete()).complete().yield();
 
-            @Override
-            public void update() {
-                stateMachine.activateState(nextState);
-            }
-        };
-        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2, state3, state4, state5);
-    }
+            pathBuilder.reset();
+            pathBuilder.lineTo(25, 108, Angle.degrees(45));
+            pathBuilder.lineTo(-22, 105, Angle.degrees(90));
+            factory.buildGVF(pathBuilder.complete()).complete().yield();
 
-    public ControlGroup doAction2(final String nextState, Position startPos){
-        Path path1 = new PathBuilder(startPos)
-                .lineTo(-20, someGameVariable == 0 ? 10 : someGameVariable == 1 ? 20 : 30, Angle.degrees(0))
-                .complete();
-        ControlState state1 = factory.buildGVF(path1).complete();
-        ControlState state2 = Shooter.getShooterControlGroup(stateMachine, hardware, ControlGroup.STOP_CONDITION.TERMINATE_ALL);
-        ControlState state3 = new ControlState(stateMachine) {
-            @Override
-            public boolean shouldTerminate() {
-                return true;
-            }
+            pathBuilder.reset();
+            pathBuilder.lineTo(20, 105);
+            factory.buildGVF(pathBuilder.complete()).complete().yield();
 
-            @Override
-            public void update() {
-                stateMachine.activateState(nextState);
-            }
-        };
-        return new ControlGroup(stateMachine, ControlGroup.STOP_CONDITION.TERMINATE_ALL, state1, state2, state3);
+            pathBuilder.reset();
+            pathBuilder.lineTo(20, 122);
+            factory.buildGVF(pathBuilder.complete()).setSpeed(0.4).complete().yield();
+
+            pathBuilder.reset();
+            pathBuilder.lineTo(-18, 122);
+            factory.buildGVF(pathBuilder.complete()).complete().yield();
+        }
     }
 }

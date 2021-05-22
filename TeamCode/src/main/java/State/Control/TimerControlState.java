@@ -1,6 +1,6 @@
 package State.Control;
 
-import MathSystems.ProgramClock;
+import Utils.ProgramClock;
 import State.StateMachine;
 
 public class TimerControlState extends ControlState {

@@ -2,6 +2,9 @@ package MathSystems;
 
 import androidx.annotation.NonNull;
 
+import MathSystems.Vector.Vector2;
+import MathSystems.Vector.Vector3;
+
 public class Position {
     private double x, y;
     private Angle r;

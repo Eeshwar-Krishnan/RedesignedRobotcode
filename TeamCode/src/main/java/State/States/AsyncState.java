@@ -3,7 +3,7 @@ package State.States;
 import State.StateMachine;
 
 public abstract class AsyncState {
-    public StateMachine stateMachine;
+    public final StateMachine stateMachine;
     public String name;
 
     public AsyncState(StateMachine stateMachine){
@@ -22,5 +22,13 @@ public abstract class AsyncState {
 
     public void terminate(){
         stateMachine.terminateState(name);
+    }
+
+    public boolean submit(){
+        return stateMachine.appendState(String.valueOf(Math.random()).replace(".", ""), this);
+    }
+
+    public boolean submit(String name){
+        return stateMachine.appendState(name, this);
     }
 }

@@ -2,6 +2,8 @@ package MathSystems;
 
 import java.util.ArrayList;
 
+import MathSystems.Vector.Vector2;
+
 /**
  * Contains some commonly used math functions, so they don't need to be repeatedly typed out
  */

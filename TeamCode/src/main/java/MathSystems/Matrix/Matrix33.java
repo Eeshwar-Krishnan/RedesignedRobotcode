@@ -1,4 +1,6 @@
-package MathSystems;
+package MathSystems.Matrix;
+
+import MathSystems.Vector.Vector3;
 
 public class Matrix33 {
     private Vector3 i, j, k;
