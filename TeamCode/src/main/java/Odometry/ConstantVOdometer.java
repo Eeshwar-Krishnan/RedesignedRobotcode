@@ -1,9 +1,8 @@
 package Odometry;
 
-import Hardware.HardwareSystems.UGSystems.Odometry;
+import Hardware.HardwareSystems.UGSystems.OdometrySystem;
 import MathSystems.Angle;
 import MathSystems.ConstantVMathUtil;
-import MathSystems.MathUtils;
 import MathSystems.Position;
 import MathSystems.Vector.Vector2;
 import MathSystems.Vector.Vector3;
@@ -24,18 +23,18 @@ public class ConstantVOdometer extends Odometer {
     }
 
     @Override
-    public Vector2 getRelativeIncrements(Odometry odometry) {
-        double rot = (odometry.getOdometryRight() - odometry.getOdometryLeft()) / 2.0;
+    public Vector2 getRelativeIncrements(OdometrySystem odometrySystem) {
+        double rot = (odometrySystem.getOdometryRight() - odometrySystem.getOdometryLeft()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
-        return new Vector2((odometry.getOdometryLeftInc() + odometry.getOdometryRightInc())/2.0, odometry.getOdometryAuxInc() - (rot * OdometryConstants.ODOMETRY_RPA));
+        return new Vector2((odometrySystem.getOdometryLeftInc() + odometrySystem.getOdometryRightInc())/2.0, odometrySystem.getOdometryAuxInc() - (rot * OdometryConstants.ODOMETRY_RPA));
     }
 
     @Override
-    public Vector3 getStaticIncrements(Vector2 relativeIncrements, Odometry odometry) {
-        double rot = (odometry.getOdometryRight() - odometry.getOdometryLeft()) / 2.0;
+    public Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem odometrySystem) {
+        double rot = (odometrySystem.getOdometryRight() - odometrySystem.getOdometryLeft()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
         Vector2 rotated = ConstantVMathUtil.toRobotCentric(relativeIncrements.getA(), relativeIncrements.getB(), rot);
-        return rotated.toVector3((odometry.getOdometryRightInc() - odometry.getOdometryLeftInc()) / 2.0);
+        return rotated.toVector3((odometrySystem.getOdometryRightInc() - odometrySystem.getOdometryLeftInc()) / 2.0);
     }
 
     @Override

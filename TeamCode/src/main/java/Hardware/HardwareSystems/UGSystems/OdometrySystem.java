@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import Hardware.HardwareSystems.HardwareSystem;
 import Odometry.Odometer;
 
-public class Odometry implements HardwareSystem {
+public class OdometrySystem implements HardwareSystem {
     private final DcMotor ol;
     private final DcMotor oa;
     private final DcMotor or;
@@ -15,7 +15,7 @@ public class Odometry implements HardwareSystem {
     private volatile Odometer attachedOdometer = null;
     private final Object odometerLock = new Object();
 
-    public Odometry(DcMotor ol, DcMotor oa, DcMotor or){
+    public OdometrySystem(DcMotor ol, DcMotor oa, DcMotor or){
         this.ol = ol;
         this.oa = oa;
         this.or = or;

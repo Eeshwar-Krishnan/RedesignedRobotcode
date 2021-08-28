@@ -1,6 +1,6 @@
 package Odometry;
 
-import Hardware.HardwareSystems.UGSystems.Odometry;
+import Hardware.HardwareSystems.UGSystems.OdometrySystem;
 import MathSystems.Position;
 import MathSystems.Vector.Vector2;
 import MathSystems.Vector.Vector3;
@@ -12,12 +12,12 @@ public abstract class Odometer {
         this.velocity = velocity;
     }
 
-    public void update(Odometry odometry) {
-        setPositionAndVelocity(getStaticIncrements(getRelativeIncrements(odometry), odometry), position, velocity);
+    public void update(OdometrySystem odometrySystem) {
+        setPositionAndVelocity(getStaticIncrements(getRelativeIncrements(odometrySystem), odometrySystem), position, velocity);
     }
 
     public abstract void reset();
-    public abstract Vector2 getRelativeIncrements(Odometry odometry);
-    public abstract Vector3 getStaticIncrements(Vector2 relativeIncrements, Odometry odometry);
+    public abstract Vector2 getRelativeIncrements(OdometrySystem odometrySystem);
+    public abstract Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem odometrySystem);
     public abstract void setPositionAndVelocity(Vector3 staticIncrements, Position position, Position velocity);
 }

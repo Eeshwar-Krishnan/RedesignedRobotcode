@@ -5,6 +5,7 @@ import Opmodes.BasicOpmode;
 import State.Action.ActionController;
 import State.StateMachine.StandardStateMachines;
 import Utils.GamepadEx.GamepadEx;
+import Utils.ProgramClock;
 
 public class ExampleUGTeleop extends BasicOpmode {
     private GamepadEx gamepadEx1, gamepadEx2;
@@ -57,6 +58,12 @@ public class ExampleUGTeleop extends BasicOpmode {
         ActionController.addAction(() -> {
             angle = hardware.getShooterSystem().clampTurretAngle(angle);
             hardware.getShooterSystem().setTurretAngle(angle);
+        });
+
+        ActionController.addAction(() -> {
+            telemetry.addData("Logic Timings", (1.0 / ProgramClock.getFrameTimeSeconds()) + " LPS | " + ProgramClock.getFrameTimeMillis() + " ms");
+            telemetry.addData("Chub", (1000.0 / hardware.getChubLatency()) + " LPS | " + hardware.getChubLatency() + " ms");
+            telemetry.addData("Ehub", (1000.0 / hardware.getEhubLatency()) + " LPS | " + hardware.getEhubLatency() + " ms");
         });
     }
 }

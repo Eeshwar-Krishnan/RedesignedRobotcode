@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import Hardware.UGHardwareController;
 import State.Action.ActionController;
 import Utils.OpmodeStatus;
+import Utils.ProgramClock;
 
 public abstract class BasicOpmode extends LinearOpMode {
     public UGHardwareController hardware;
@@ -27,7 +28,10 @@ public abstract class BasicOpmode extends LinearOpMode {
                 started = true;
                 OpmodeStatus.triggerStartActions();
             }
+            hardware.update();
             ActionController.update();
+            telemetry.update();
+            ProgramClock.update();
         }
     }
 }
