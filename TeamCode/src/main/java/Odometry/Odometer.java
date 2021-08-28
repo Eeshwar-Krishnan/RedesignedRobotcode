@@ -1,12 +1,12 @@
 package Odometry;
 
-import Hardware.HardwareSystems.UltimateGoal.Odometry;
+import Hardware.HardwareSystems.UGSystems.Odometry;
 import MathSystems.Position;
 import MathSystems.Vector.Vector2;
 import MathSystems.Vector.Vector3;
 
 public abstract class Odometer {
-    private Position position, velocity;
+    protected Position position, velocity;
     public Odometer(Position position, Position velocity) {
         this.position = position;
         this.velocity = velocity;

@@ -2,14 +2,16 @@ package Odometry;
 
 import Hardware.HardwareSystems.UGSystems.Odometry;
 import MathSystems.Angle;
+import MathSystems.ConstantVMathUtil;
+import MathSystems.MathUtils;
 import MathSystems.Position;
-import Utils.ProgramClock;
 import MathSystems.Vector.Vector2;
 import MathSystems.Vector.Vector3;
+import Utils.ProgramClock;
 
-public class SimpleOdometer extends Odometer {
+public class ConstantVOdometer extends Odometer {
     private final Position prevPosition;
-    public SimpleOdometer(Position position, Position velocity) {
+    public ConstantVOdometer(Position position, Position velocity) {
         super(position, velocity);
         prevPosition = position.clone();
     }
@@ -32,7 +34,7 @@ public class SimpleOdometer extends Odometer {
     public Vector3 getStaticIncrements(Vector2 relativeIncrements, Odometry odometry) {
         double rot = (odometry.getOdometryRight() - odometry.getOdometryLeft()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
-        Vector2 rotated = relativeIncrements.rotate(Angle.radians(rot));
+        Vector2 rotated = ConstantVMathUtil.toRobotCentric(relativeIncrements.getA(), relativeIncrements.getB(), rot);
         return rotated.toVector3((odometry.getOdometryRightInc() - odometry.getOdometryLeftInc()) / 2.0);
     }
 

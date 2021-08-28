@@ -1,8 +1,10 @@
 package MathSystems;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import MathSystems.Vector.Vector2;
+import Utils.Path.Path;
 
 /**
  * Contains some commonly used math functions, so they don't need to be repeatedly typed out
@@ -25,6 +27,10 @@ public class MathUtils {
             }
         }
         return dist;
+    }
+
+    public static Angle getRotDist(Angle start, Angle end){
+        return Angle.radians(MathUtils.getRadRotDist(start.radians(), end.radians()));
     }
 
     public static double sign(double in){
@@ -119,6 +125,36 @@ public class MathUtils {
         }
 
         return new Vector2(x, y);
+    }
+
+    public static Position getClosestPoint(Position position, Path path){
+        double minDist = Double.MAX_VALUE;
+        Position pos = Position.ZERO();
+        for(int i = 1; i < path.getPathLines().size(); i ++){
+            Vector2 closestPoint = getClosestPoint(path.getPathLines().get(i-1), path.getPathLines().get(i), position.getPos());
+            if(closestPoint.distanceTo(position.getPos()) < minDist){
+                minDist = closestPoint.distanceTo(position.getPos());
+                pos.set(new Position(closestPoint, path.getLines().get(i).getR()));
+            }
+        }
+        return pos;
+    }
+
+    public static double pathLength(Position position, Path path){
+        double minDist = Double.MAX_VALUE;
+        int idx = 0;
+        Vector2 pos = Vector2.ZERO();
+        for(int i = 1; i < path.getPathLines().size(); i ++){
+            Vector2 closestPoint = getClosestPoint(path.getPathLines().get(i-1), path.getPathLines().get(i), position.getPos());
+            if(closestPoint.distanceTo(position.getPos()) < minDist){
+                minDist = closestPoint.distanceTo(position.getPos());
+                idx = i;
+                pos.set(closestPoint);
+            }
+        }
+        ArrayList<Vector2> pathArr = new ArrayList<>(path.getPathLines().subList(idx, path.getPathLines().size()));
+        pathArr.add(pos);
+        return arcLength(pathArr);
     }
 
     public static Vector2 toPolar(Vector2 pos){

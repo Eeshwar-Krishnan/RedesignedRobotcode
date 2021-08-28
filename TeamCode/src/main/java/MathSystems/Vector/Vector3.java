@@ -78,6 +78,14 @@ public class Vector3 {
         this.c = c;
     }
 
+    public double length(){
+        return Math.sqrt((a*a) + (b*b) + (c*c));
+    }
+
+    public Vector3 normalize() {
+        return scale(1/length());
+    }
+
     public Vector2 getVector2(){
         return new Vector2(a, b);
     }
