@@ -31,6 +31,11 @@ public class Spline implements Segment{
 
     @Override
     public Position project(Position pos) {
+        return get(projectPos(pos));
+    }
+
+    @Override
+    public double projectPos(Position pos) {
         double curr = 0.5;
         double length = 0;
 
@@ -62,6 +67,6 @@ public class Spline implements Segment{
             }
         }
 
-        return get(Math.max(0, Math.min(curr, 1)));
+        return (Math.max(0, Math.min(curr, 1)));
     }
 }

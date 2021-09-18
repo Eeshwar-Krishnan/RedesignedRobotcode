@@ -39,6 +39,7 @@ public class TestAuto extends BasicOpmode {
                 .lineTo(new Position(0, 50, Angle.degrees(0)))
                 .lineTo(new Position(50, 50, Angle.degrees(0)))
                 .build();
+
         long start = System.currentTimeMillis();
         LinearProfile profile = LinearProfiler.profile(path, 60, 10, 30, 5, 100);
         long time = System.currentTimeMillis() - start;

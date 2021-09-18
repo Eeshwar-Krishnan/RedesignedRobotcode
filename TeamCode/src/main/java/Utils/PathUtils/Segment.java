@@ -12,4 +12,6 @@ public interface Segment {
     Vector3 secondDeriv(double t);
 
     Position project(Position pos);
+
+    double projectPos(Position pos);
 }

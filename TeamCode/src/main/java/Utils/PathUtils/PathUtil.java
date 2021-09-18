@@ -93,4 +93,22 @@ public class PathUtil {
 
         return bestPos;
     }
+
+    public static double projectPosNew(Position position, Path path){
+        double minDist = Double.MAX_VALUE;
+        Position bestPos = Position.ZERO();
+        double projectPos = 0;
+
+        for(Segment s : path.getSegments()){
+            double d = s.projectPos(position);
+            Position pos = s.get(d);
+            if(pos.getPos().distanceTo(position.getPos()) < minDist){
+                minDist = pos.getPos().distanceTo(position.getPos());
+                bestPos.set(pos);
+                projectPos = d;
+            }
+        }
+
+        return projectPos;
+    }
 }

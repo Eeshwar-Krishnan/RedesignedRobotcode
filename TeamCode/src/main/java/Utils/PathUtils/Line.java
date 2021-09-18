@@ -49,4 +49,16 @@ public class Line implements Segment{
         double angR = start.getR().radians() + (rChange.radians() * ((pos.getX() - start.getX()) / slope.getA()));
         return new Position(closest, Angle.radians(angR));
     }
+
+    @Override
+    public double projectPos(Position pos) {
+        if(slope.getA() == 0){
+            return ((pos.getY() - start.getY()) / slope.getB());
+        }
+        if(slope.getB() == 0){
+            return ((pos.getX() - start.getX()) / slope.getA());
+        }
+
+        return ((pos.getX() - start.getX()) / slope.getA());
+    }
 }

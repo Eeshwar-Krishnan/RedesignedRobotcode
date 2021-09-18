@@ -10,6 +10,7 @@ import MathSystems.Position;
 import MathSystems.Vector.Vector2;
 import MathSystems.Vector.Vector3;
 import State.Action.Action;
+import Utils.PathUtils.Markers.PathMarkerBase;
 import Utils.PathUtils.Path;
 import Utils.PathUtils.PathUtil;
 import Utils.PathUtils.Profiling.LinearProfile;
@@ -49,9 +50,15 @@ public class GVFDrive implements Action {
 
     @Override
     public void update() {
-        double val = PathUtil.projectClosest(position, path, lastProject);
+        double val = PathUtil.projectPosNew(position, path);
         Position closestPoint = path.get(val);
         Vector2 posDelta = closestPoint.getPos().subtract(position.getPos());
+
+        for(PathMarkerBase marker : path.getMarkers()){
+            if(marker.pathPos <= val){
+                marker.call();
+            }
+        }
 
         if(posDelta.length() > 1 || Double.isNaN(val)){
             //Double check the project was right because we are so far away from where we expect
