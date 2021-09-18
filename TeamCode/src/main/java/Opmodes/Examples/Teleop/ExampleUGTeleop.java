@@ -1,5 +1,7 @@
 package Opmodes.Examples.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import MathSystems.Vector.Vector3;
 import Opmodes.BasicOpmode;
 import State.Action.ActionController;
@@ -7,6 +9,7 @@ import State.StateMachine.StandardStateMachines;
 import Utils.GamepadEx.GamepadEx;
 import Utils.ProgramClock;
 
+@TeleOp
 public class ExampleUGTeleop extends BasicOpmode {
     private GamepadEx gamepadEx1, gamepadEx2;
     private Vector3 dtDirection;

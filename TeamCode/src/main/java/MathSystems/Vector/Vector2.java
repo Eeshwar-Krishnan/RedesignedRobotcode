@@ -79,7 +79,13 @@ public class Vector2 {
         return angle;
     }
 
+    public double dot(Vector2 v){
+        return (a * v.a) + (b * v.b);
+    }
+
     public Vector2 normalize() {
+        if(length() == 0)
+            return Vector2.ZERO();
         return scale(1/length());
     }
 

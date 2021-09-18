@@ -1,8 +1,10 @@
 package Hardware.HardwareSystems.UGSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import Hardware.HardwareSystems.HardwareSystem;
+import MathSystems.Vector.Vector3;
 import Odometry.Odometer;
 
 public class OdometrySystem implements HardwareSystem {
@@ -20,7 +22,9 @@ public class OdometrySystem implements HardwareSystem {
         this.oa = oa;
         this.or = or;
     }
-    public void calibrate() {
+
+    @Override
+    public void initialize() {
         olOffset = ol.getCurrentPosition();
         oaOffset = oa.getCurrentPosition();
         orOffset = or.getCurrentPosition();
@@ -42,7 +46,7 @@ public class OdometrySystem implements HardwareSystem {
     }
 
     public double getOdometryLeft(){
-        return olPos;
+        return olPos * -1;
     }
 
     public double getOdometryRight(){
@@ -54,7 +58,7 @@ public class OdometrySystem implements HardwareSystem {
     }
 
     public double getOdometryLeftInc(){
-        return olPos - lastOl;
+        return (olPos - lastOl) * -1;
     }
 
     public double getOdometryRightInc(){

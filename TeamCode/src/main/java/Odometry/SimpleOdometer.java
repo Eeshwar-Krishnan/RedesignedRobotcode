@@ -22,18 +22,18 @@ public class SimpleOdometer extends Odometer {
     }
 
     @Override
-    public Vector2 getRelativeIncrements(OdometrySystem odometrySystem) {
-        double rot = (odometrySystem.getOdometryRight() - odometrySystem.getOdometryLeft()) / 2.0;
+    public Vector2 getRelativeIncrements(OdometrySystem system) {
+        double rot = (system.getOdometryRightInc() - system.getOdometryLeftInc()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
-        return new Vector2((odometrySystem.getOdometryLeftInc() + odometrySystem.getOdometryRightInc())/2.0, odometrySystem.getOdometryAuxInc() - (rot * OdometryConstants.ODOMETRY_RPA));
+        return new Vector2((system.getOdometryLeftInc() + system.getOdometryRightInc())/2.0, system.getOdometryAuxInc() - (rot * OdometryConstants.ODOMETRY_RPA));
     }
 
     @Override
-    public Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem odometrySystem) {
-        double rot = (odometrySystem.getOdometryRight() - odometrySystem.getOdometryLeft()) / 2.0;
+    public Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem system) {
+        double rot = (system.getOdometryRight() - system.getOdometryLeft()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
         Vector2 rotated = relativeIncrements.rotate(Angle.radians(rot));
-        return rotated.toVector3((odometrySystem.getOdometryRightInc() - odometrySystem.getOdometryLeftInc()) / 2.0);
+        return rotated.toVector3((system.getOdometryRightInc() - system.getOdometryLeftInc()) / 2.0);
     }
 
     @Override

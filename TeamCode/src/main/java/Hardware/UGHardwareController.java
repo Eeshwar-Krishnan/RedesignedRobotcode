@@ -19,10 +19,10 @@ public class UGHardwareController extends HardwareController {
 
     @Override
     public void setupSystems(HardwareMap hardwareMap) {
-        drivetrainSystem = new DrivetrainSystem(hardwareMap.dcMotor.get("bl"), hardwareMap.dcMotor.get("br"), hardwareMap.dcMotor.get("tl"), hardwareMap.dcMotor.get("tr"));
+        drivetrainSystem = new DrivetrainSystem(hardwareMap.dcMotor.get("bl"), hardwareMap.dcMotor.get("br"), hardwareMap.dcMotor.get("fl"), hardwareMap.dcMotor.get("fr"));
         shooterSystem = new ShooterSystem(hardwareMap.dcMotor.get("ol"), hardwareMap.dcMotor.get("shooter"), hardwareMap.servo.get("shooterLoadArm"), hardwareMap.servo.get("turret"), hardwareMap.servo.get("shooterTilt"));
         intakeSystem = new IntakeSystem(hardwareMap.dcMotor.get("intake"), hardwareMap.dcMotor.get("oa"), hardwareMap.servo.get("intakeShield"));
-        odometrySystem = new OdometrySystem(hardwareMap.dcMotor.get("intake"), hardwareMap.dcMotor.get("br"), hardwareMap.dcMotor.get("oa"));
+        odometrySystem = new OdometrySystem(hardwareMap.dcMotor.get("intake"), hardwareMap.dcMotor.get("oa"), hardwareMap.dcMotor.get("br"));
         chubHardwareSystems.add(drivetrainSystem);
         ehubHardwareSystems.add(shooterSystem);
         ehubHardwareSystems.add(intakeSystem);

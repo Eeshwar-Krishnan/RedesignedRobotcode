@@ -3,6 +3,7 @@ package State.StateMachine;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 
 import State.Action.Action;
@@ -10,14 +11,13 @@ import State.Action.ActionController;
 
 public class StateMachine implements Action {
     private final ENDTYPE endtype;
-    private final HashMap<String, Action> states;
+    private final LinkedHashMap<String, Action> states;
     private final ArrayList<String> stateNames;
     private int stateIdx = 0;
     private boolean deactivate = false;
 
-    public StateMachine(HashMap<String, Action> states, ENDTYPE endtype){
-        this.states = new HashMap<>();
-        this.states.putAll(states);
+    public StateMachine(LinkedHashMap<String, Action> states, ENDTYPE endtype){
+        this.states = states;
         this.stateNames = new ArrayList<>();
         this.stateNames.addAll(states.keySet());
         this.endtype = endtype;
@@ -29,7 +29,7 @@ public class StateMachine implements Action {
         if(states.size() == 0){
             deactivate = true;
         }else{
-            ActionController.addAction(states.get(0));
+            ActionController.addAction(states.get(stateNames.get(0)));
         }
     }
 

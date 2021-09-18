@@ -17,7 +17,7 @@ public abstract class Odometer {
     }
 
     public abstract void reset();
-    public abstract Vector2 getRelativeIncrements(OdometrySystem odometrySystem);
-    public abstract Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem odometrySystem);
+    public abstract Vector2 getRelativeIncrements(OdometrySystem system);
+    public abstract Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem system);
     public abstract void setPositionAndVelocity(Vector3 staticIncrements, Position position, Position velocity);
 }

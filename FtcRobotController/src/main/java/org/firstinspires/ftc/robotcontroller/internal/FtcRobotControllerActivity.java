@@ -103,6 +103,7 @@ import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogServic
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
 import org.firstinspires.ftc.onbotjava.OnBotJavaHelperImpl;
 import org.firstinspires.ftc.onbotjava.OnBotJavaProgrammingMode;
+import org.firstinspires.ftc.robotcontroller.internal.VisDebug.VDConnectionController;
 import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
 import org.firstinspires.ftc.robotcore.internal.hardware.android.AndroidBoard;
 import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManagerFactory;
@@ -383,6 +384,8 @@ public class FtcRobotControllerActivity extends Activity
 
     // check to see if there is a preferred Wi-Fi to use.
     checkPreferredChannel();
+
+    //VDConnectionController.start();
   }
 
   protected UpdateUI createUpdateUI() {
@@ -451,6 +454,7 @@ public class FtcRobotControllerActivity extends Activity
     if (preferencesHelper != null) preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
 
     RobotLog.cancelWriteLogcatToDisk();
+    VDConnectionController.stop();
   }
 
   protected void bindToService() {

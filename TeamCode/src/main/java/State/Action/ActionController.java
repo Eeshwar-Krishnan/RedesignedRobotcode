@@ -30,8 +30,10 @@ public class ActionController {
     }
 
     public void internalUpdate(){
-        toInitialize.addAll(queuedActions);
-        queuedActions.clear();
+        synchronized (queuedActions) {
+            toInitialize.addAll(queuedActions);
+            queuedActions.clear();
+        }
 
         for(Action action : toInitialize){
             if(!activeActions.contains(action) && !deactivatedActions.contains(action)) {
@@ -41,30 +43,39 @@ public class ActionController {
         }
 
         toInitialize.clear();
-
-        for(Action action : activeActions){
-            action.update();
-            if(action.shouldDeactivate()){
-                deactivatedActions.add(action);
+        synchronized (deactivatedActions) {
+            for (Action action : activeActions) {
+                action.update();
+                if (action.shouldDeactivate()) {
+                    deactivatedActions.add(action);
+                }
             }
-        }
 
-        for(Action action : deactivatedActions){
-            action.onEnd();
-        }
+            for (Action action : deactivatedActions) {
+                action.onEnd();
+            }
 
-        deactivatedActions.clear();
+            activeActions.removeAll(deactivatedActions);
+
+            deactivatedActions.clear();
+        }
     }
 
     public static void addAction(Action action){
-        instance.queuedActions.add(action);
+        synchronized (instance.queuedActions){
+            instance.queuedActions.add(action);
+        }
     }
 
     public static void addActions(List<Action> actions){
-        instance.queuedActions.addAll(actions);
+        synchronized (instance.queuedActions) {
+            instance.queuedActions.addAll(actions);
+        }
     }
 
-    public void terminateState(Action action){
-        deactivatedActions.add(action);
+    public void terminateAction(Action action){
+        synchronized (instance.deactivatedActions) {
+            deactivatedActions.add(action);
+        }
     }
 }

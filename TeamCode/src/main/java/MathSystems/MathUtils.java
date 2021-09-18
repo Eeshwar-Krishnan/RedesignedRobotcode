@@ -1,16 +1,23 @@
 package MathSystems;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import MathSystems.Vector.Vector2;
-import Utils.Path.Path;
+import MathSystems.Vector.Vector3;
+import Utils.PathUtils.Path;
+import Utils.PathUtils.PathUtil;
 
 /**
  * Contains some commonly used math functions, so they don't need to be repeatedly typed out
  */
 
 public class MathUtils {
+    public static boolean epsilonEquals(double val1, double val2){
+        return Math.abs(val1 - val2) < 1e-6;
+    }
+
     public static Vector2 toPolar(double x, double y){
         double r = Math.sqrt((x * x) + (y * y));
         double theta = Math.atan2(y, x);
@@ -34,10 +41,17 @@ public class MathUtils {
     }
 
     public static double sign(double in){
-        if(in == 0) {
-            return 1;
+        if(epsilonEquals(in, 0.0)) {
+            return 0;
         }
         return in/Math.abs(in);
+    }
+
+    public static double signedMax(double val, double compare){
+        if(Math.abs(val) < Math.abs(compare)){
+            return sign(val) * compare;
+        }
+        return val;
     }
 
     public static boolean inBetween(Vector2 start, Vector2 end, Vector2 point) {
@@ -125,36 +139,6 @@ public class MathUtils {
         }
 
         return new Vector2(x, y);
-    }
-
-    public static Position getClosestPoint(Position position, Path path){
-        double minDist = Double.MAX_VALUE;
-        Position pos = Position.ZERO();
-        for(int i = 1; i < path.getPathLines().size(); i ++){
-            Vector2 closestPoint = getClosestPoint(path.getPathLines().get(i-1), path.getPathLines().get(i), position.getPos());
-            if(closestPoint.distanceTo(position.getPos()) < minDist){
-                minDist = closestPoint.distanceTo(position.getPos());
-                pos.set(new Position(closestPoint, path.getLines().get(i).getR()));
-            }
-        }
-        return pos;
-    }
-
-    public static double pathLength(Position position, Path path){
-        double minDist = Double.MAX_VALUE;
-        int idx = 0;
-        Vector2 pos = Vector2.ZERO();
-        for(int i = 1; i < path.getPathLines().size(); i ++){
-            Vector2 closestPoint = getClosestPoint(path.getPathLines().get(i-1), path.getPathLines().get(i), position.getPos());
-            if(closestPoint.distanceTo(position.getPos()) < minDist){
-                minDist = closestPoint.distanceTo(position.getPos());
-                idx = i;
-                pos.set(closestPoint);
-            }
-        }
-        ArrayList<Vector2> pathArr = new ArrayList<>(path.getPathLines().subList(idx, path.getPathLines().size()));
-        pathArr.add(pos);
-        return arcLength(pathArr);
     }
 
     public static Vector2 toPolar(Vector2 pos){

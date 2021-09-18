@@ -22,6 +22,7 @@ public abstract class HardwareController {
     public HardwareController(HardwareMap hardwareMap){
         this.hardwareMap = hardwareMap;
         this.chubHardwareSystems = new ArrayList<>();
+        this.ehubHardwareSystems = new ArrayList<>();
         this.heartbeat = new AtomicLong(-1);
         this.chubLatency = new AtomicLong(1);
         this.ehubLatency = new AtomicLong(1);

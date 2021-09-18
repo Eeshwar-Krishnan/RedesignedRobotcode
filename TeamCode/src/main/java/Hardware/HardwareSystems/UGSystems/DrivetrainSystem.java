@@ -2,8 +2,10 @@ package Hardware.HardwareSystems.UGSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import Drive.DriveConstants;
 import Hardware.HardwareSystems.HardwareSystem;
 import Hardware.SmartDevices.SmartMotor.SmartMotor;
+import MathSystems.MathUtils;
 import MathSystems.Vector.Vector2;
 import MathSystems.Vector.Vector3;
 
@@ -20,10 +22,10 @@ public class DrivetrainSystem implements HardwareSystem {
 
     @Override
     public void update() {
-        bl.setPower(blPower);
-        br.setPower(brPower);
-        tl.setPower(tlPower);
-        tr.setPower(trPower);
+        bl.setPower(MathUtils.signedMax(blPower, DriveConstants.kStatic));
+        br.setPower(MathUtils.signedMax(brPower, DriveConstants.kStatic));
+        tl.setPower(MathUtils.signedMax(tlPower, DriveConstants.kStatic));
+        tr.setPower(MathUtils.signedMax(trPower, DriveConstants.kStatic));
     }
 
     public void setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior zeroPowerBehaviour){

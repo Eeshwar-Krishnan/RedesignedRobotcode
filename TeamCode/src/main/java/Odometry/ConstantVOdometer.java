@@ -1,5 +1,7 @@
 package Odometry;
 
+import com.qualcomm.robotcore.util.RobotLog;
+
 import Hardware.HardwareSystems.UGSystems.OdometrySystem;
 import MathSystems.Angle;
 import MathSystems.ConstantVMathUtil;
@@ -10,9 +12,11 @@ import Utils.ProgramClock;
 
 public class ConstantVOdometer extends Odometer {
     private final Position prevPosition;
+    private final Vector2 prevInc = Vector2.ZERO();
     public ConstantVOdometer(Position position, Position velocity) {
         super(position, velocity);
         prevPosition = position.clone();
+        this.prevInc.set(Vector2.ZERO());
     }
 
     @Override
@@ -20,27 +24,32 @@ public class ConstantVOdometer extends Odometer {
         this.position.set(Position.ZERO());
         this.velocity.set(Position.ZERO());
         this.prevPosition.set(Position.ZERO());
+        this.prevInc.set(Vector2.ZERO());
     }
 
     @Override
-    public Vector2 getRelativeIncrements(OdometrySystem odometrySystem) {
-        double rot = (odometrySystem.getOdometryRight() - odometrySystem.getOdometryLeft()) / 2.0;
+    public Vector2 getRelativeIncrements(OdometrySystem system) {
+        double rot = (system.getOdometryRightInc() - system.getOdometryLeftInc()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
-        return new Vector2((odometrySystem.getOdometryLeftInc() + odometrySystem.getOdometryRightInc())/2.0, odometrySystem.getOdometryAuxInc() - (rot * OdometryConstants.ODOMETRY_RPA));
+        return new Vector2((system.getOdometryLeftInc() + system.getOdometryRightInc())/2.0, system.getOdometryAuxInc() - (rot * OdometryConstants.ODOMETRY_RPA));
     }
 
     @Override
-    public Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem odometrySystem) {
-        double rot = (odometrySystem.getOdometryRight() - odometrySystem.getOdometryLeft()) / 2.0;
+    public Vector3 getStaticIncrements(Vector2 relativeIncrements, OdometrySystem system) {
+        double rot = (system.getOdometryRightInc() - system.getOdometryLeftInc()) / 2.0;
         rot *= OdometryConstants.ODOMETRY_CPR;
         Vector2 rotated = ConstantVMathUtil.toRobotCentric(relativeIncrements.getA(), relativeIncrements.getB(), rot);
-        return rotated.toVector3((odometrySystem.getOdometryRightInc() - odometrySystem.getOdometryLeftInc()) / 2.0);
+        double absRot = ((system.getOdometryRight() - system.getOdometryLeft())/2.0) * OdometryConstants.ODOMETRY_CPR;
+        double tau = (2 * Math.PI);
+        rotated.set(rotated.rotate(Angle.radians(((-absRot % tau) + tau) % tau)));
+        return rotated.toVector3((system.getOdometryRightInc() - system.getOdometryLeftInc()) / 2.0);
     }
 
     @Override
     public void setPositionAndVelocity(Vector3 staticIncrements, Position position, Position velocity) {
         Vector2 linInc = staticIncrements.getVector2().scale(OdometryConstants.ODOMETRY_CPI);
-        position.set(position.add(linInc, Angle.radians(staticIncrements.getC())));
+        linInc.setB(linInc.getB() * -1);
+        position.set(position.add(linInc, Angle.radians(staticIncrements.getC() * OdometryConstants.ODOMETRY_CPR)));
         double tau = (2 * Math.PI);
         position.setR(Angle.radians(((position.getR().radians() % tau) + tau) % tau));
         double dt = ProgramClock.getFrameTimeSeconds();

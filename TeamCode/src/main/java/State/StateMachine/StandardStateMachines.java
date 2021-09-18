@@ -2,6 +2,7 @@ package State.StateMachine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import Hardware.HardwareSystems.UGSystems.ShooterSystem;
 import State.Action.Action;
@@ -10,7 +11,7 @@ import State.Action.StandardActions.DelayAction;
 public class StandardStateMachines {
     public static class UltimateGoal {
         public static StateMachine shootStatemachine(ShooterSystem system) {
-            HashMap<String, Action> actions = new HashMap<>();
+            LinkedHashMap<String, Action> actions = new LinkedHashMap<>();
             actions.put("Index In", system::setIndexIn);
             actions.put("Index In Delay", new DelayAction(100));
             actions.put("Index Out", system::setIndexOut);
